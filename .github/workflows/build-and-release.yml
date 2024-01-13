@@ -19,4 +19,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           
     - name: Build and push Docker image
-      run: docker build -t seanwlk/wfmodbot:${{  github.ref_name }} . && docker push seanwlk/wfmodbot:${{  github.ref_name }}
+      run: docker build -t seanwlk/wfmodbot:latest . && docker push seanwlk/wfmodbot:latest
