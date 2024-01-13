@@ -14,7 +14,7 @@ module.exports = {
         if (err) console.log(err);
         let moderationsEmbed = new EmbedBuilder()
           .setColor('#ffff00')
-          .setURL("https://seanwlk.cf/wfmodbot/mutes.php")
+          .setURL("${config.webapp_url}/mutes.php")
           .setTitle(`${result.length} Active mutes`);
         var mutes = "";
         const currentUnixTime = Math.round((new Date()).getTime() / 1000);
@@ -26,7 +26,7 @@ module.exports = {
         try {
           moderationsEmbed.addFields({name:'These are the current Active Mutes', value:mutes, inline:true});
         } catch {
-          message.reply("`Too many moderations to be displayed. Check dashboard: `" + "<https://seanwlk.cf/wfmodbot/mutes.php>")
+          message.reply("`Too many moderations to be displayed. Check dashboard: `" + "<${config.webapp_url}/mutes.php>")
         }
         message.channel.send({embeds:[moderationsEmbed]});
       });

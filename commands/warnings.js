@@ -29,7 +29,7 @@ module.exports = {
 				if (warnings.length < 1023) {
 					warningsEmbed.addFields({name :`These are the warnings for this user`, value: warnings, inline: true});
 				} else {
-					warningsEmbed.addFields({name :`Too many warnings`, value: `Please use the [web dashboard](https://seanwlk.cf/wfmodbot/warnings.php?user=${args[0]}) to check warnings for this user.`, inline: true});
+					warningsEmbed.addFields({name :`Too many warnings`, value: `Please use the [web dashboard](${config.webapp_url}/warnings.php?user=${args[0]}) to check warnings for this user.`, inline: true});
 				}
 				message.channel.send({embeds:[warningsEmbed]});
 			});

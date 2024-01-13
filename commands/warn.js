@@ -41,7 +41,7 @@ module.exports = {
 							.setColor('#00ff00')
 							.setTitle('Warning sent successfully')
 							.addFields({name:`Moderator`, value: `${message.member}`, inline: true},
-							{name:`Warned User`, value: `${member}\n${member.user.tag}\n${member.user.id}\n[Warnings on dashboard](https://seanwlk.cf/wfmodbot/warnings.php?user=${member.id})`,inline:  true},
+							{name:`Warned User`, value: `${member}\n${member.user.tag}\n${member.user.id}\n[Warnings on dashboard](${config.webapp_url}/warnings.php?user=${member.id})`,inline:  true},
 							{name :`Reason`, value: `${reason}`, inline: false})
 							.setTimestamp();
 						message.channel.send({embeds:[logAction]});

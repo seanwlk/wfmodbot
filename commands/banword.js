@@ -35,7 +35,7 @@ module.exports = {
 							.setColor('#00ff00')
 							.setTitle('Blocked word was added to the database')
 							.addFields({name:`Word`, value:`\`${args[0]}\``, inline: true},
-							{name:`Current wordlist`, value:`[Click here](https://seanwlk.cf/wfmodbot/blockedwordlist.php)`, inline: true})
+							{name:`Current wordlist`, value:`[Click here](${config.webapp_url}/blockedwordlist.php)`, inline: true})
 							.setTimestamp();
 						client.blockedwordlist.push(args[0])
 						message.channel.send({embeds:[logAction]});
