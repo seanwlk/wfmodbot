@@ -1,0 +1,20 @@
+{
+  "name": "wfmodbot",
+  "version": "1.2.0",
+  "description": "Warface Mod Bot",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seanwlk/wfmodbot.git"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "seanwlk",
+  "license": "GPL-2.0",
+  "dependencies": {
+    "discord.js": "^14.6.0",
+    "mysql": "^2.18.1"
+  }
+}
