@@ -33,7 +33,7 @@ var config = {
     templates.forEach(e => {
       this.WarnTemplates[e.template] = e.message
     });
-    this.setConfig({Admin: admins.map(row => row.discord_id)});
+    this.setConfig({bot_admins: admins.map(row => row.discord_id)});
     this.setConfig({messagesToCache: JSON.parse(JSON.stringify(msgCache))});
     this.setConfig({autoreactions:{bugreportChannels: autoReactionsBugreport.map(row => row.channel),feedbackChannels: autoReactionsFeedback.map(row => row.channel)}});
     return config;

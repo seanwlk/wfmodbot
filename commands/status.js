@@ -7,7 +7,7 @@ module.exports = {
 	description: 'current status',
 	publicAvailable: false,
 	async execute(message,args,client) {
-  	if (!config.admins.includes(message.author.id)) return;
+  	if (!config.bot_admins.includes(message.author.id)) return;
     let statusEmbed = new EmbedBuilder()
       .setTitle(":gear: Service Status :gear:")
       .setColor('#00ff00')

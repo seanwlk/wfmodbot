@@ -6,7 +6,7 @@ module.exports = {
 	name: 'initreact',
 	description: 'Adds the platform emoji reactions to a message.',
 	async execute(message,args,client) {
-		if ((!message.member.roles.cache.some(r => r.name === config.Moderator)) && !config.admins.includes(message.author.id)) return;
+		if ((!message.member.roles.cache.some(r => r.name === config.Moderator)) && (!message.member.roles.cache.some(r => r.name === config.Admin))) return;
 		let pcEmoji = client.guilds.cache.get(config.MAIN_SERVER).emojis.cache.find(r => r.name === "pc");
 		let ps4Emoji = client.guilds.cache.get(config.MAIN_SERVER).emojis.cache.find(r => r.name === "playstation");
 		let xboxEmoji = client.guilds.cache.get(config.MAIN_SERVER).emojis.cache.find(r => r.name === "xbox");

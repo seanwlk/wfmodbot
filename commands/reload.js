@@ -5,7 +5,7 @@ module.exports = {
 	name: 'reload',
 	description: 'Reloads all configs from DB',
 	async execute(message,args,client) {
-		if (!config.admins.includes(message.author.id)) return;
+		if (!config.bot_admins.includes(message.author.id)) return;
 		config.updateConfig().then(()=>{
 			message.react("\u2705")
 		})
