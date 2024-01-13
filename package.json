@@ -1,6 +1,6 @@
 {
   "name": "wfmodbot",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Warface Mod Bot",
   "main": "index.js",
   "repository": {
@@ -12,7 +12,7 @@
     "dev": "nodemon index.js"
   },
   "author": "seanwlk",
-  "license": "GPL-2.0",
+  "license": "GPL-3.0",
   "dependencies": {
     "discord.js": "^14.6.0",
     "mysql": "^2.18.1"
