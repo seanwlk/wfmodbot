@@ -3,6 +3,7 @@ const util = require('util');
 
 var config = {
   bot_token: null,
+  bot_admins: null,
   prefix: null,
   messagesToCache: [],
   WarnTemplates: {},
@@ -28,14 +29,17 @@ var config = {
     const autoReactionsBugreport = await queryAsync(`SELECT channel FROM wfmodbot.channelautoreactions WHERE reactiontype = 'bugreport'`);
     const autoReactionsFeedback = await queryAsync(`SELECT channel FROM wfmodbot.channelautoreactions WHERE reactiontype = 'feedback'`);
     confs.forEach(e => {
-      this[e.var] = e.value
+      config[e.var] = e.value
     });
     templates.forEach(e => {
-      this.WarnTemplates[e.template] = e.message
+      config.WarnTemplates[e.template] = e.message
     });
-    this.setConfig({bot_admins: admins.map(row => row.discord_id)});
-    this.setConfig({messagesToCache: JSON.parse(JSON.stringify(msgCache))});
-    this.setConfig({autoreactions:{bugreportChannels: autoReactionsBugreport.map(row => row.channel),feedbackChannels: autoReactionsFeedback.map(row => row.channel)}});
+    config.bot_admins = admins.map(row => row.discord_id);
+    config.messagesToCache = JSON.parse(JSON.stringify(msgCache));
+    config.autoreactions= {
+      bugreportChannels: autoReactionsBugreport.map(row => row.channel),
+      feedbackChannels: autoReactionsFeedback.map(row => row.channel)
+    };
     return config;
   },
   getConfig: function() {

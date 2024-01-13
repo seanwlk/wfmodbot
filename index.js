@@ -224,7 +224,10 @@ client.on('messageReactionAdd', (reaction, user) => {
 
 client.on('ready', () => {
   // Cache the Message to watch reactions from
-  config.messagesToCache.forEach(k => client.channels.cache.get(k.channel).messages.fetch(k.message));
+  config.messagesToCache.forEach(k => {
+    if (client.channels.cache.get(k.channel))
+    client.channels.cache.get(k.channel).messages.fetch(k.message)
+  });
   // Cache theMessage to watch reactions from
   console.log(`[${new Date()}]\nWFModBot has started.\n    Watching over ${client.users.cache.size} users\n    ${client.channels.cache.size} channels\n    ${client.guilds.cache.size} Servers`);
   client.user.setPresence({ activities: [{ name: 'over Warface Community Discord', type: Discord.ActivityType.Watching }], status: 'online' });
