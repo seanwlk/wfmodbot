@@ -17,9 +17,6 @@ jobs:
       with:
         node-version: '20'
 
-    - name: Install dependencies
-      run: npm install
-
     - name: Set up Docker
       uses: docker/login-action@v3
       with:
