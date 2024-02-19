@@ -28,6 +28,7 @@ var config = {
     const admins = await queryAsync(`SELECT discord_id FROM wfmodbot.users WHERE type = 'admin'`);
     const autoReactionsBugreport = await queryAsync(`SELECT channel FROM wfmodbot.channelautoreactions WHERE reactiontype = 'bugreport'`);
     const autoReactionsFeedback = await queryAsync(`SELECT channel FROM wfmodbot.channelautoreactions WHERE reactiontype = 'feedback'`);
+    const blockedwordlist = await queryAsync(`SELECT word FROM wfmodbot.blockedwordlist`);
     confs.forEach(e => {
       config[e.var] = e.value
     });
@@ -40,6 +41,7 @@ var config = {
       bugreportChannels: autoReactionsBugreport.map(row => row.channel),
       feedbackChannels: autoReactionsFeedback.map(row => row.channel)
     };
+    config.blockedwordlist = blockedwordlist.map(row => row.word);
     return config;
   },
   getConfig: function() {

@@ -23,9 +23,6 @@ for (const file of commandFiles) {
 	client.commands.set(command.name, command);
 }
 
-client.blockedwordlist = [];
-
-
 // ERROR HANDLERS
 process.on('uncaughtException', function(err) {
   console.log(err);
@@ -102,7 +99,7 @@ function containsWordFromList(input, words) {
 }
 
 function bannedWordslist(input){
-  return client.blockedwordlist.some(word => input.toLowerCase().includes(word.toLowerCase()));
+  return config.blockedwordlist.some(word => input.toLowerCase().includes(word.toLowerCase()));
 }
 
 function feedbackChannelReactions(message){
@@ -137,20 +134,6 @@ function deleteMessagesFilter(message){
       })
     }
   }
-}
-
-function loadBlockedWordsList() {
-  utils.mysqlcon.getConnection(function(err, connection) {
-		if (err) console.log(err);
-		connection.query(`SELECT * FROM wfmodbot.blockedwordlist`, function(err, result, fields) {
-			if (err) console.log(err);
-			client.blockedwordlist = [];
-			Object.keys(result).forEach(function(key) {
-			  client.blockedwordlist.push(result[key].word)
-			});
-		});
-		connection.release();
-	});
 }
 // CUSTOM FUNCTIONS
 
@@ -231,7 +214,6 @@ client.on('ready', () => {
   // Cache theMessage to watch reactions from
   console.log(`[${new Date()}]\nWFModBot has started.\n    Watching over ${client.users.cache.size} users\n    ${client.channels.cache.size} channels\n    ${client.guilds.cache.size} Servers`);
   client.user.setPresence({ activities: [{ name: 'over Warface Community Discord', type: Discord.ActivityType.Watching }], status: 'online' });
-  loadBlockedWordsList();
 });
 
 client.on('messageCreate', async message => {
