@@ -7,30 +7,23 @@ module.exports = {
 	description: 'Show current active mutes',
 	async execute(message,args,client) {
 		if ((!message.member.roles.cache.some(r => r.name === config.Moderator)) && (!message.member.roles.cache.some(r => r.name === config.Admin))) return;
-
-		utils.mysqlcon.getConnection(function(err, connection) {
-      if (err) console.log(err);
-      connection.query(`SELECT * FROM wfmodbot.mutes WHERE guild = ${message.guild.id}`, function(err, result, fields) {
-        if (err) console.log(err);
-        let moderationsEmbed = new EmbedBuilder()
+    let mutes = await utils.queryAsync("SELECT * FROM wfmodbot.mutes WHERE guild = 309400144967761931",[message.guild.id]);
+    let moderationsEmbed = new EmbedBuilder()
           .setColor('#ffff00')
-          .setURL("${config.webapp_url}/mutes.php")
-          .setTitle(`${result.length} Active mutes`);
-        var mutes = "";
-        const currentUnixTime = Math.round((new Date()).getTime() / 1000);
-        Object.keys(result).forEach(function(key) {
-          var mute = result[key];
-          mutes += `<@${mute.discord_id}> | Remaining ${utils.secToHMS(mute.when_unmute - currentUnixTime)}\n`;
-        });
-        if (mutes === "") mutes = "No active mutes";
-        try {
-          moderationsEmbed.addFields({name:'These are the current Active Mutes', value:mutes, inline:true});
-        } catch {
-          message.reply("`Too many moderations to be displayed. Check dashboard: `" + "<${config.webapp_url}/mutes.php>")
-        }
-        message.channel.send({embeds:[moderationsEmbed]});
-      });
-      connection.release();
+          .setURL(`${config.webapp_url}/mutes.php`)
+          .setTitle(`${mutes.length} Active mutes`);
+    let embedBody = '';
+    let ts = utils.currentUnixTime();
+    Object.keys(mutes).forEach(function(key) {
+      var mute = mutes[key];
+      embedBody += `<@${mute.discord_id}> | Remaining ${utils.secToHMS(mute.when_unmute - ts)}\n`;
     });
+    if (mutes.length === 0) embedBody = "No active mutes";
+    try {
+      moderationsEmbed.addFields({name:'These are the current Active Mutes', value:embedBody, inline:true});
+    } catch {
+      moderationsEmbed.addFields({name:`Too many moderations to be displayed`, value: `Check dashboard: <${config.webapp_url}/mutes.php>`, inline:true})
+    }
+    message.channel.send({embeds:[moderationsEmbed]});
 	},
 };

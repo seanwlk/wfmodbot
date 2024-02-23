@@ -8,7 +8,7 @@ module.exports = {
 	async execute(message, args, client) {
 		if ((!message.member.roles.cache.some(r => r.name === config.Moderator)) && (!message.member.roles.cache.some(r => r.name === config.Admin))) return;
 
-		client.users.fetch((message.mentions.users.first() || args[0])).then(function(user) {
+		client.users.fetch((message.mentions.users.first() || args[0])).then(async function(user) {
 
 			message.guild.members.unban(user).then(() => {
 				message.reply(`:white_check_mark:    **${user.tag}** has been unbanned by ${message.author.tag}`);
@@ -17,13 +17,10 @@ module.exports = {
 			});
 
 			// MySQL remove ban
-			utils.mysqlcon.getConnection(function(err, connection) {
-				if (err) console.log(err);
-				connection.query(`DELETE FROM wfmodbot.bans WHERE guild = ${message.guild.id} AND discord_id = ${user.id}`, function(err, result) {
-					if (err) console.log(err);
-				});
-				connection.release();
-			});
+			await utils.queryAsync('DELETE FROM wfmodbot.bans WHERE guild = ? AND discord_id = ?',[
+				message.guild.id,
+				user.id
+			]);
 
 		}).catch(err => message.channel.send("`" + err.name + ": " + err.message + "`"))
 	},

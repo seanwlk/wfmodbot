@@ -8,7 +8,7 @@ module.exports = {
 	async execute(message, args, client) {
 		if ((!message.member.roles.cache.some(r => r.name === config.Moderator)) && (!message.member.roles.cache.some(r => r.name === config.Admin))) return;
 
-		client.users.fetch((message.mentions.users.first() || args[0])).then(function(user) {
+		client.users.fetch((message.mentions.users.first() || args[0])).then(async function(user) {
 			if (!user)
 				return message.reply("Please mention a valid member of this server");
 			let reason = args.slice(1).join(' ');
@@ -44,14 +44,16 @@ module.exports = {
 			});
 
 			// MySQL add ban
-			let currentUnixTime = Math.round((new Date()).getTime() / 1000);
-			utils.mysqlcon.getConnection(function(err, connection) {
-				if (err) console.log(err);
-				connection.query(`INSERT INTO wfmodbot.bans (discord_id, username, moderator, guild, reason, date) VALUES (\"${user.id}\",\"${utils.mysqlcon.escape((user.tag).replace(/[^\x20-\x7E]+/g, ''))}\",\"${message.author.id}\",\"${message.guild.id}\",\"${utils.mysqlcon.escape(reason)}\",\"${currentUnixTime}\")`, function(err, result) {
-					if (err) console.log(err);
-				});
-				connection.release();
-			});
+			await utils.queryAsync('INSERT INTO wfmodbot.bans (discord_id, username, moderator, guild, reason, date) VALUES (?,?,?,?,?,?)',[
+				user.id,
+				user.tag,
+				message.author.id,
+				message.guild.id,
+				reason,
+				utils.currentUnixTime()
+			]);
+
 		}).catch(err => message.channel.send("`" + err.name + ": " + err.message + "`"))
+		
 	},
 };

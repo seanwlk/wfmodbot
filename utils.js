@@ -1,9 +1,12 @@
+const util = require('util');
 const mysql = require('mysql');
 const assert = require('assert');
 
 assert(process.env.DB_HOST, 'DB_HOST is missing');
 assert(process.env.DB_USER, 'DB_USER is missing');
 assert(process.env.DB_PWD, 'DB_PWD is missing');
+
+module.exports.currentUnixTime = function() { return Math.round((new Date()).getTime() / 1000) }
 
 module.exports.Unix_timestamp = function(t) {
   var a = new Date(t * 1000);
@@ -36,10 +39,13 @@ module.exports.sleeper = function(ms) {
   };
 }
 
-module.exports.mysqlcon = mysql.createPool({
+mysqlcon = mysql.createPool({
   connectionLimit: 10,
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PWD,
   charset: "utf8mb4"
 });
+module.exports.mysqlcon = mysqlcon
+
+module.exports.queryAsync = util.promisify(mysqlcon.query).bind(mysqlcon);

@@ -5,7 +5,7 @@ const utils = require('../utils.js');
 module.exports = {
 	name: 'kick',
 	description: 'Kicks a member from the server',
-	asyncexecute(message,args,client) {
+	async execute(message,args,client) {
 		if ((!message.member.roles.cache.some(r => r.name === config.Moderator)) && (!message.member.roles.cache.some(r => r.name === config.Admin))) return;
 
 		message.guild.members.fetch(args[0]).then(function(member) {

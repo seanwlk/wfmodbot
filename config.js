@@ -1,5 +1,4 @@
 const utils = require('./utils.js');
-const util = require('util');
 
 var config = {
   bot_token: null,
@@ -21,14 +20,13 @@ var config = {
     config = { ...config, ...newConfig };
   },
   updateConfig: async function() {
-    const queryAsync = util.promisify(utils.mysqlcon.query).bind(utils.mysqlcon);
-    const confs = await queryAsync('SELECT var, value FROM wfmodbot.config');
-    const templates = await queryAsync('SELECT template, message FROM wfmodbot.warntemplates');
-    const msgCache = await queryAsync('SELECT channel, message FROM wfmodbot.messagestocache');
-    const admins = await queryAsync(`SELECT discord_id FROM wfmodbot.users WHERE type = 'admin'`);
-    const autoReactionsBugreport = await queryAsync(`SELECT channel FROM wfmodbot.channelautoreactions WHERE reactiontype = 'bugreport'`);
-    const autoReactionsFeedback = await queryAsync(`SELECT channel FROM wfmodbot.channelautoreactions WHERE reactiontype = 'feedback'`);
-    const blockedwordlist = await queryAsync(`SELECT word FROM wfmodbot.blockedwordlist`);
+    const confs = await utils.queryAsync('SELECT var, value FROM wfmodbot.config');
+    const templates = await utils.queryAsync('SELECT template, message FROM wfmodbot.warntemplates');
+    const msgCache = await utils.queryAsync('SELECT channel, message FROM wfmodbot.messagestocache');
+    const admins = await utils.queryAsync(`SELECT discord_id FROM wfmodbot.users WHERE type = 'admin'`);
+    const autoReactionsBugreport = await utils.queryAsync(`SELECT channel FROM wfmodbot.channelautoreactions WHERE reactiontype = 'bugreport'`);
+    const autoReactionsFeedback = await utils.queryAsync(`SELECT channel FROM wfmodbot.channelautoreactions WHERE reactiontype = 'feedback'`);
+    const blockedwordlist = await utils.queryAsync(`SELECT word FROM wfmodbot.blockedwordlist`);
     confs.forEach(e => {
       config[e.var] = e.value
     });

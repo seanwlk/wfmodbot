@@ -8,7 +8,7 @@ module.exports = {
 	async execute(message, args, client) {
 		if ((!message.member.roles.cache.some(r => r.name === config.Moderator)) && (!message.member.roles.cache.some(r => r.name === config.Admin))) return;
 
-		message.guild.members.fetch(args[0]).then(function(member) {
+		message.guild.members.fetch(args[0]).then(async function(member) {
 			if (!member) return message.reply("Please mention a valid member of this server");
 
 			let role = message.guild.roles.cache.find(r => r.name === config.mute_role);
@@ -31,13 +31,10 @@ module.exports = {
 			});
 
 			// MySQL remove mute
-			utils.mysqlcon.getConnection(function(err, connection) {
-				if (err) console.log(err);
-				connection.query(`DELETE FROM wfmodbot.mutes WHERE guild = ${message.guild.id} AND discord_id = ${member.id}`, function(err, result) {
-					if (err) console.log(err);
-				});
-				connection.release();
-			});
+			await utils.queryAsync('DELETE FROM wfmodbot.mutes WHERE guild = ? AND discord_id = ?',[
+				message.guild.id,
+				member.id
+			]);
 		}).catch(err => message.channel.send("`" + err.name + ": " + err.message + "`"))
 	},
 };

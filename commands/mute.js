@@ -8,7 +8,7 @@ module.exports = {
 	async execute(message, args, client) {
 		if ((!message.member.roles.cache.some(r => r.name === config.Moderator)) && (!message.member.roles.cache.some(r => r.name === config.Admin))) return;
 
-		message.guild.members.fetch(args[0]).then(function(member) {
+		message.guild.members.fetch(args[0]).then(async function(member) {
 
 			if (!member){
 				var member = client.users.cache.get(args[0])
@@ -19,16 +19,15 @@ module.exports = {
 			let amount = muteTime.match(/(\d+)/);
 			let time_multiplier = muteTime.replace(/[0-9]/g, '').toLowerCase();
 
-			const currentUnixTime = Math.round((new Date()).getTime() / 1000);
-			var muteUntil = currentUnixTime;
+			var muteUntil = "";
 			if (time_multiplier === "m" || time_multiplier === "min" || time_multiplier === "minutes") {
-				muteUntil = currentUnixTime + (amount[0] * 60);
+				muteUntil = utils.currentUnixTime() + (amount[0] * 60);
 				console.log(`Muting ${member.user.tag} for ${amount[0]} minutes`);
 			} else if (time_multiplier === "h" || time_multiplier === "hours") {
-				muteUntil = currentUnixTime + (amount[0] * 3600);
+				muteUntil = utils.currentUnixTime() + (amount[0] * 3600);
 				console.log(`Muting ${member.user.tag} for ${amount[0]} hours`);
 			} else if (time_multiplier === "d" || time_multiplier === "days") {
-				muteUntil = currentUnixTime + (amount[0] * 86400);
+				muteUntil = utils.currentUnixTime() + (amount[0] * 86400);
 				console.log(`Muting ${member.user.tag} for ${amount[0]} DAYS`);
 			} else if (time_multiplier === "permanent") {
 				muteUntil = "permanent";
@@ -75,13 +74,14 @@ module.exports = {
 			});
 
 			// MySQL add mute
-			utils.mysqlcon.getConnection(function(err, connection) {
-				if (err) console.log(err);
-				connection.query(`INSERT INTO wfmodbot.mutes (discord_id, username, moderator, guild, date, when_unmute) VALUES (\"${member.id}\",\"${utils.mysqlcon.escape((member.user.tag).replace(/[^\x20-\x7E]+/g, ''))}\",\"${message.author.id}\",\"${message.guild.id}\",\"${currentUnixTime}\",\"${muteUntil}\")`, function(err, result) {
-					if (err) console.log(err);
-				});
-				connection.release();
-			});
+			await utils.queryAsync('INSERT INTO wfmodbot.mutes (discord_id, username, moderator, guild, date, when_unmute) VALUES (?,?,?,?,?,?)',[
+				member.id,
+				member.user.tag,
+				message.author.id,
+				message.guild.id,
+				utils.currentUnixTime(),
+				muteUntil
+			]);
 		}).catch(err => message.channel.send("`" + err.name + ": " + err.message + "`"))
 	},
 };

@@ -46,34 +46,25 @@ client.on('error', err => {
 // ERROR HANDLERS
 
 //* LOOP FUNCTIONS
-function unMuteCheck() {
-  utils.mysqlcon.getConnection(function(err, connection) {
-    if (err) console.log(err);
-    connection.query("SELECT * FROM wfmodbot.mutes", function(err, result, fields) {
-      if (err) console.log(err);
-      let currentUnixTime = Math.round((new Date()).getTime() / 1000);
-      Object.keys(result).forEach(function(key) {
-        var mute = result[key];
-        if (currentUnixTime > parseInt(mute.when_unmute)) {
-          connection.query(`DELETE FROM wfmodbot.mutes WHERE id = ${mute.id}`, function(err, result, fields) {
-            if (err) console.log(err);
-            let modguild = client.guilds.cache.get(mute.guild);
-            let user = mute.discord_id;
-            modguild.members.fetch({ user, force: true })
-              .then(member => {
-                let role = modguild.roles.cache.find(r => r.name === config.mute_role);
-                member.roles.remove(role).then(() => {
-                  console.log(`Mute for ${mute.username} expired`);
-                }).catch(err => {
-                  console.log(`Error while removing mute from ${mute.username} | ${err} `);
-                });
-              })
-              .catch(err => {console.log(`Mute for ${mute.username} expired. But user is not in the server. | ${err} `)})
+async function unMuteCheck() {
+  let mutes = await utils.queryAsync("SELECT * FROM wfmodbot.mutes");
+  Object.keys(mutes).forEach(async function(key) {
+    var mute = mutes[key];
+    if (utils.currentUnixTime() > parseInt(mute.when_unmute)) {
+      await utils.queryAsync("DELETE FROM wfmodbot.mutes WHERE id = ?",[mute.id]);
+      let modguild = client.guilds.cache.get(mute.guild);
+      let user = mute.discord_id;
+      modguild.members.fetch({ user, force: true })
+        .then(member => {
+          let role = modguild.roles.cache.find(r => r.name === config.mute_role);
+          member.roles.remove(role).then(() => {
+            console.log(`Mute for ${mute.username} expired`);
+          }).catch(err => {
+            console.log(`Error while removing mute from ${mute.username} | ${err} `);
           });
-        }
-      });
-    });
-    connection.release();
+        })
+        .catch(err => {console.log(`Mute for ${mute.username} expired. But user is not in the server. | ${err} `)})
+    }
   });
 }
 
@@ -89,8 +80,12 @@ function clearRoleReactions(){
   })
 }
 
-setInterval(unMuteCheck, 150000); // 2.5 MIN 150000
-setInterval(clearRoleReactions, 150000); // 2.5 MIN 150000
+function runTasks() {
+  setInterval(async () => { await unMuteCheck() }, 150000);  // 2.5 MIN 150000
+  setInterval(clearRoleReactions, 150000); // 2.5 MIN 150000
+}
+
+runTasks();
 //LOOP FUNCTIONS */
 
 // CUSTOM FUNCTIONS
@@ -139,22 +134,16 @@ function deleteMessagesFilter(message){
 
 
 // Check if users is muted when he joins server
-client.on('guildMemberAdd', member => {
-  utils.mysqlcon.getConnection(function(err, connection) {
-    if (err) console.log(err);
-    connection.query(`SELECT * FROM wfmodbot.mutes WHERE guild = ${member.guild.id} AND discord_id = ${member.user.id}`, function(err, result, fields) {
-      if (err) console.log(err);
-      if (result.length !== 0) {
-        let role = member.guild.roles.cache.find(r => r.name === config.mute_role);
-        member.roles.add(role).then(() => {
-          console.log(`${member.user.username} joined ${member.guild.name} and got muted`);
-        }).catch(err => {
-          console.log(`Error while muting ${member.user.tag} on server join`);
-        });
-      }
+client.on('guildMemberAdd', async member => {
+  let joinedUserMutes = await utils.queryAsync("SELECT * FROM wfmodbot.mutes WHERE guild = ? AND discord_id = ?",[member.guild.id,member.user.id]);
+  if (joinedUserMutes.length != 0) {
+    let role = member.guild.roles.cache.find(r => r.name === config.mute_role);
+    member.roles.add(role).then(() => {
+      console.log(`${member.user.username} joined ${member.guild.name} and got muted`);
+    }).catch(err => {
+      console.log(`Error while muting ${member.user.tag} on server join`);
     });
-    connection.release();
-  });
+  }
   
   // JUST TO REFRESH ONLINE STATUS
   client.user.setPresence({ activities: [{ name: 'over Warface Community Discord', type: Discord.ActivityType.Watching }], status: 'online' });
