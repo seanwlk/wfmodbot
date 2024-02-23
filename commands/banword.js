@@ -17,7 +17,7 @@ module.exports = {
 						if (err) console.log(err);
 						client.blockedwordlist = [];
 						Object.keys(result).forEach(function(key) {
-						  client.blockedwordlist.push(result[key].word)
+						  config.blockedwordlist.push(result[key].word)
 						});
 					});
 					connection.release();
@@ -37,7 +37,7 @@ module.exports = {
 							.addFields({name:`Word`, value:`\`${args[0]}\``, inline: true},
 							{name:`Current wordlist`, value:`[Click here](${config.webapp_url}/blockedwordlist.php)`, inline: true})
 							.setTimestamp();
-						client.blockedwordlist.push(args[0])
+						config.blockedwordlist.push(args[0])
 						message.channel.send({embeds:[logAction]});
 				});
 				connection.release();
