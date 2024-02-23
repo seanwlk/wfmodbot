@@ -20,7 +20,7 @@ module.exports = {
 		Object.keys(warnings).forEach(function(key) {
 			var warning = warnings[key];
 			let warnDate = new Date(parseInt(warning.date * 1000)).toLocaleDateString("it-IT");
-			embedBody += `Mod <@${warning.moderator}> | Reason \`${warning.reason}\` | Date ${warnDate}\n`;
+			embedBody += `Mod <@${warning.moderator}> | Reason '${warning.reason}' | Date ${warnDate}\n`;
 		});
 		if (warnings.length === 0) embedBody = "No warnings for this user";
 		if (embedBody.length < 1023) {
