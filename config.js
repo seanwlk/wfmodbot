@@ -2,6 +2,7 @@ const utils = require('./utils.js');
 
 var config = {
   bot_token: null,
+  bot_token_dev: null,
   bot_admins: null,
   prefix: null,
   messagesToCache: [],

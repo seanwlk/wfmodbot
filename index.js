@@ -227,5 +227,5 @@ client.on('messageCreate', async message => {
 });
 
 config.updateConfig().then(()=>{
-  client.login(config.bot_token);
+  client.login(process.env.NODE_ENV === 'dev' ? config.bot_token_dev : config.bot_token);
 })
