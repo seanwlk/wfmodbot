@@ -207,23 +207,23 @@ client.on('ready', () => {
 
 client.on('messageCreate', async message => {
 	if (message.author.bot) return;
-	feedbackChannelReactions(message);
-	bugreportChannelReactions(message)
-	deleteMessagesFilter(message); // Delete messages with discord invites + ban words (scam links)
+  feedbackChannelReactions(message);
+  bugreportChannelReactions(message)
+  deleteMessagesFilter(message); // Delete messages with discord invites + ban words (scam links)
   if (message.content.indexOf(config.prefix) !== 0) return;
   if (message.guild === null) return;
 
   const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
-	if (!client.commands.has(command)) return;
+  if (!client.commands.has(command)) return;
 
-	try {
-		await client.commands.get(command).execute(message, args, client);
-	} catch (error) {
-		console.error(error);
-		message.react("\u2757")
-	}
+  try {
+    await client.commands.get(command).execute(message, args, client);
+  } catch (error) {
+    console.error(error);
+    message.react("\u2757")
+  }
 });
 
 config.updateConfig().then(()=>{
