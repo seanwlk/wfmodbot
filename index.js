@@ -102,7 +102,13 @@ function feedbackChannelReactions(message){
     let upvote = client.guilds.cache.get(config.DEV_SERVER).emojis.cache.find(r => r.name === "upvote")
     let downvote = client.guilds.cache.get(config.DEV_SERVER).emojis.cache.find(r => r.name === "downvote")
     message.react(upvote)
-      .then(()=>message.react(downvote))
+      .then(()=>message.react(downvote)
+        .catch(()=> {
+          console.log(`ERR | Reaction blocked: ${message.channel.name} - ${message.author}`)
+        })
+      ).catch(()=> {
+        console.log(`ERR | Reaction blocked: ${message.channel.name} - ${message.author}`)
+      })
   } else {
     return
   }
@@ -111,7 +117,14 @@ function feedbackChannelReactions(message){
 function bugreportChannelReactions(message){
   if (config.autoreactions.bugreportChannels.includes(message.channel.id)){
     message.react("❗")
-      .then(()=>message.react("❌"))
+      .then(()=>
+        message.react("❌").catch(()=> {
+          console.log(`ERR | Reaction blocked: ${message.channel.name} - ${message.author}`)
+        })
+      ).catch(()=> {
+        console.log(`ERR | Reaction blocked: ${message.channel.name} - ${message.author}`)
+      })
+
   } else {
     return
   }
