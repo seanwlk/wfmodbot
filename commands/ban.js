@@ -29,7 +29,7 @@ module.exports = {
 					.setColor('#00ff00')
 					.setTitle('Member was banned')
 					.addFields({name:`Moderator`, value:`${message.member}`, inline:true},
-					{name:`Banned User`, value:`${user}\n${user.tag}\n${user.id}`, inline:true},
+					{name:`Banned User`, value:`${user}\n\`${user.tag}\`\n${user.id}`, inline:true},
 					{name:`Reason`, value:`${reason}`, inline:false})
 					.setTimestamp();
 				message.channel.send({embeds:[logAction]});

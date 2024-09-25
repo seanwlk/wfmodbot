@@ -7,7 +7,7 @@ module.exports = {
 	description: 'Show current active mutes',
 	async execute(message,args,client) {
 		if ((!message.member.roles.cache.some(r => r.name === config.Moderator)) && (!message.member.roles.cache.some(r => r.name === config.Admin))) return;
-    let mutes = await utils.queryAsync("SELECT * FROM wfmodbot.mutes WHERE guild = 309400144967761931",[message.guild.id]);
+    let mutes = await utils.queryAsync("SELECT * FROM wfmodbot.mutes WHERE guild = ?",[message.guild.id]);
     let moderationsEmbed = new EmbedBuilder()
           .setColor('#ffff00')
           .setURL(`${config.webapp_url}/mutes.php`)

@@ -17,7 +17,7 @@ module.exports = {
 					.setColor('#00ff00')
 					.setTitle('Mute was removed from user')
 					.addFields({name:`Moderator`, value:`${message.member}`, inline:true},
-					{name:`Unmuted User`, value:`${member}\n${member.user.tag}\n${member.user.id}`, inline:true})
+					{name:`Unmuted User`, value:`${member}\n\`${member.user.tag}\`\n${member.user.id}`, inline:true})
 					.setTimestamp();
 				message.channel.send({embeds:[logAction]});
 			}).catch(err => {

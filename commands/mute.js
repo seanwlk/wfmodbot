@@ -52,7 +52,7 @@ module.exports = {
 					.setTitle('User was muted')
 					.setDescription(`Mute expires: ${(muteUntil === "permanent" ? "Never" : utils.Unix_timestamp(muteUntil))}`)
 					.addFields({name:`Moderator`,value: `${message.member}`, inline: true},
-					{name:`Muted User`, value: `${member}\n${member.user.tag}\n${member.user.id}`, inline: true})
+					{name:`Muted User`, value: `${member}\n\`${member.user.tag}\`\n${member.user.id}`, inline: true})
 					.setTimestamp();
 				message.channel.send({embeds:[logAction]});
 
