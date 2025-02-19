@@ -15,7 +15,8 @@ var config = {
   },
   autoreactions: {
     bugreportChannels: [],
-    feedbackChannels: []
+    feedbackChannels: [],
+    newsChannels: []
   },
   setConfig: function(newConfig) {
     config = { ...config, ...newConfig };
@@ -27,6 +28,7 @@ var config = {
     const admins = await utils.queryAsync(`SELECT discord_id FROM wfmodbot.users WHERE type = 'admin'`);
     const autoReactionsBugreport = await utils.queryAsync(`SELECT channel FROM wfmodbot.channelautoreactions WHERE reactiontype = 'bugreport'`);
     const autoReactionsFeedback = await utils.queryAsync(`SELECT channel FROM wfmodbot.channelautoreactions WHERE reactiontype = 'feedback'`);
+    const autoReactionsNews = await utils.queryAsync(`SELECT channel FROM wfmodbot.channelautoreactions WHERE reactiontype = 'news'`);
     const blockedwordlist = await utils.queryAsync(`SELECT word FROM wfmodbot.blockedwordlist`);
     confs.forEach(e => {
       config[e.var] = e.value
@@ -38,7 +40,8 @@ var config = {
     config.messagesToCache = JSON.parse(JSON.stringify(msgCache));
     config.autoreactions= {
       bugreportChannels: autoReactionsBugreport.map(row => row.channel),
-      feedbackChannels: autoReactionsFeedback.map(row => row.channel)
+      feedbackChannels: autoReactionsFeedback.map(row => row.channel),
+      newsChannels: autoReactionsNews.map(row => row.channel)
     };
     config.blockedwordlist = blockedwordlist.map(row => row.word);
     return config;

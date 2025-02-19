@@ -130,6 +130,20 @@ function bugreportChannelReactions(message){
   }
 }
 
+async function newsChannelReactions(message){
+  if (config.autoreactions.newsChannels.includes(message.channel.id)){
+    let upvote = client.guilds.cache.get(config.DEV_SERVER).emojis.cache.find(r => r.name === "upvote")
+    let downvote = client.guilds.cache.get(config.DEV_SERVER).emojis.cache.find(r => r.name === "downvote")
+    await message.react(upvote)
+    await message.react(downvote)
+    await message.react("😁")
+    await message.react("😮")
+    await message.react("❤️")
+  } else {
+    return
+  }
+}
+
 function deleteMessagesFilter(message){
   if ((containsWordFromList(message.content,['discord.gg/','discordapp.com/invite/']) || 
       bannedWordslist(message.content)) && !(message.content.includes('discord.gg/wf') || 
@@ -221,7 +235,8 @@ client.on('ready', () => {
 client.on('messageCreate', async message => {
 	if (message.author.bot) return;
   feedbackChannelReactions(message);
-  bugreportChannelReactions(message)
+  bugreportChannelReactions(message);
+  await newsChannelReactions(message);
   deleteMessagesFilter(message); // Delete messages with discord invites + ban words (scam links)
   if (message.content.indexOf(config.prefix) !== 0) return;
   if (message.guild === null) return;
