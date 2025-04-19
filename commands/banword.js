@@ -10,7 +10,7 @@ module.exports = {
 			if (!args[0]){
 				return message.channel.send(`\`No blocked word was specified\``);
 			}
-			await utils.queryAsync('INSERT INTO wfmodbot.blockedwordlist (word) VALUES (?)',[args[0].toLocaleLowerCase()]);
+			await utils.queryAsync('INSERT INTO blockedwordlist (word) VALUES (?)',[args[0].toLocaleLowerCase()]);
 			config.blockedwordlist.push(args[0]);
 			message.react("\u2705");
 	},

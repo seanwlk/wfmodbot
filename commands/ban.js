@@ -43,8 +43,7 @@ module.exports = {
 				message.channel.send({embeds:[logAction]});
 			});
 
-			// MySQL add ban
-			await utils.queryAsync('INSERT INTO wfmodbot.bans (discord_id, username, moderator, guild, reason, date) VALUES (?,?,?,?,?,?)',[
+			await utils.queryAsync('INSERT INTO bans (discord_id, username, moderator, guild, reason, date) VALUES (?,?,?,?,?,?)',[
 				user.id,
 				user.tag,
 				message.author.id,

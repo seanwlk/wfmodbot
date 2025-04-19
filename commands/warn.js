@@ -18,7 +18,7 @@ module.exports = {
 			if (!reason) return message.reply("Please enter a warning reason");
 
 			// MySQL add warning
-			let ShowWarnName = await utils.queryAsync('SELECT ShowWarnName FROM wfmodbot.users WHERE discord_id= ?',[message.author.id]);
+			let ShowWarnName = await utils.queryAsync('SELECT ShowWarnName FROM users WHERE discord_id= ?',[message.author.id]);
 			const reasonEmbed = new EmbedBuilder()
 				.setColor('#0099ff')
 				.setTitle(`You got a warning from ${message.guild.name}`)
@@ -52,7 +52,7 @@ module.exports = {
 				message.channel.send({embeds:[logAction]});
 			});
 
-			await utils.queryAsync('INSERT INTO wfmodbot.warnings (discord_id, username, moderator, guild, reason, date) VALUES (?,?,?,?,?,?)',[
+			await utils.queryAsync('INSERT INTO warnings (discord_id, username, moderator, guild, reason, date) VALUES (?,?,?,?,?,?)',[
 				member.id,
 				member.user.tag,
 				message.author.id,

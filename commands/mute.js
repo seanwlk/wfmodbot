@@ -73,8 +73,7 @@ module.exports = {
 				message.channel.send({embeds:[logAction]});
 			});
 
-			// MySQL add mute
-			await utils.queryAsync('INSERT INTO wfmodbot.mutes (discord_id, username, moderator, guild, date, when_unmute) VALUES (?,?,?,?,?,?)',[
+			await utils.queryAsync('INSERT INTO mutes (discord_id, username, moderator, guild, date, when_unmute) VALUES (?,?,?,?,?,?)',[
 				member.id,
 				member.user.tag,
 				message.author.id,

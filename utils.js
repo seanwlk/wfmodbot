@@ -1,8 +1,9 @@
-const util = require('util');
-const mysql = require('mysql');
 const assert = require('assert');
+const { dbModels, rawQuery } = require("./db.js")
 
 assert(process.env.DB_HOST, 'DB_HOST is missing');
+assert(process.env.DB_PORT, 'DB_PORT is missing');
+assert(process.env.DB_NAME, 'DB_NAME is missing');
 assert(process.env.DB_USER, 'DB_USER is missing');
 assert(process.env.DB_PWD, 'DB_PWD is missing');
 
@@ -39,13 +40,4 @@ module.exports.sleeper = function(ms) {
   };
 }
 
-mysqlcon = mysql.createPool({
-  connectionLimit: 10,
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PWD,
-  charset: "utf8mb4"
-});
-module.exports.mysqlcon = mysqlcon
-
-module.exports.queryAsync = util.promisify(mysqlcon.query).bind(mysqlcon);
+module.exports.queryAsync = rawQuery;

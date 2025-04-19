@@ -16,8 +16,7 @@ module.exports = {
 				message.channel.send(`Sorry ${message.author} I could not unban because of : ${err}`);
 			});
 
-			// MySQL remove ban
-			await utils.queryAsync('DELETE FROM wfmodbot.bans WHERE guild = ? AND discord_id = ?',[
+			await utils.queryAsync('DELETE FROM bans WHERE guild = ? AND discord_id = ?',[
 				message.guild.id,
 				user.id
 			]);

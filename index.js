@@ -47,11 +47,11 @@ client.on('error', err => {
 
 //* LOOP FUNCTIONS
 async function unMuteCheck() {
-  let mutes = await utils.queryAsync("SELECT * FROM wfmodbot.mutes");
+  let mutes = await utils.queryAsync("SELECT * FROM mutes");
   Object.keys(mutes).forEach(async function(key) {
     var mute = mutes[key];
     if (utils.currentUnixTime() > parseInt(mute.when_unmute)) {
-      await utils.queryAsync("DELETE FROM wfmodbot.mutes WHERE id = ?",[mute.id]);
+      await utils.queryAsync("DELETE FROM mutes WHERE id = ?",[mute.id]);
       let modguild = client.guilds.cache.get(mute.guild);
       let user = mute.discord_id;
       modguild.members.fetch({ user, force: true })
@@ -162,7 +162,7 @@ function deleteMessagesFilter(message){
 
 // Check if users is muted when he joins server
 client.on('guildMemberAdd', async member => {
-  let joinedUserMutes = await utils.queryAsync("SELECT * FROM wfmodbot.mutes WHERE guild = ? AND discord_id = ?",[member.guild.id,member.user.id]);
+  let joinedUserMutes = await utils.queryAsync("SELECT * FROM mutes WHERE guild = ? AND discord_id = ?",[member.guild.id,member.user.id]);
   if (joinedUserMutes.length != 0) {
     let role = member.guild.roles.cache.find(r => r.name === config.mute_role);
     member.roles.add(role).then(() => {

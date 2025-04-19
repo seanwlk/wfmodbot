@@ -2,7 +2,7 @@
 Discord moderation bot for the official Warface Server
 
 ## Configuration
-The configuration fully resides in the database config table. At startup the bot will be initialized with the three enviroment variables **DB_HOST**, **DB_USER** and **DB_PWD**. 
+The configuration fully resides in the database config table. At startup the bot will be initialized with the three enviroment variables **DB_HOST**, **DB_PORT**, **DB_NAME**, **DB_USER** and **DB_PWD**. Can be initialized in mariadb by passing **DB_DIALECT** = `mariadb` but by default in any other case the main database will be Postgres.
 
 Available database config variables:
 - bot_token

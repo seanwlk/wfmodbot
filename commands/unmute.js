@@ -31,7 +31,7 @@ module.exports = {
 			});
 
 			// MySQL remove mute
-			await utils.queryAsync('DELETE FROM wfmodbot.mutes WHERE guild = ? AND discord_id = ?',[
+			await utils.queryAsync('DELETE FROM mutes WHERE guild = ? AND discord_id = ?',[
 				message.guild.id,
 				member.id
 			]);
