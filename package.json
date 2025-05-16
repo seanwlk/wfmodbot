@@ -1,6 +1,6 @@
 {
   "name": "wfmodbot",
-  "version": "1.2.9",
+  "version": "1.2.10",
   "description": "Warface Mod Bot",
   "main": "index.js",
   "repository": {

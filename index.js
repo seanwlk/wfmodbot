@@ -145,16 +145,24 @@ async function newsChannelReactions(message){
 }
 
 function deleteMessagesFilter(message){
-  if ((containsWordFromList(message.content,['discord.gg/','discordapp.com/invite/']) || 
-      bannedWordslist(message.content)) && !(message.content.includes('discord.gg/wf') || 
-      message.content.includes('discord.gg/warface') || 
-      message.content.includes('discord.gg/VrUqt4W'))) { 
-    if (!message.member) return
-    if (message.member.manageable) {
-      message.delete().catch(()=> {
-        console.log("ERR | Autodeleting message in: "+message.channel.name)
-      })
+  const deleteFilter = (content) => 
+      (containsWordFromList(content,['discord.gg/','discordapp.com/invite/']) || bannedWordslist(content)) && 
+      !(content.includes('discord.gg/wf') || 
+      content.includes('discord.gg/warface') || 
+      content.includes('discord.gg/VrUqt4W'));
+
+  if (message.messageSnapshots.size > 0) { // Discord added the forward ability which can bypass the content scan
+    for (const snapshot of message.messageSnapshots.values()) {
+      if (deleteFilter(snapshot.content)) {
+        return message.delete().catch(()=> {console.log("ERR | Autodeleting message in: "+message.channel.name)});
+      }
     }
+  }
+  if (deleteFilter(message.content)) { 
+    if (!message.member) return
+    return message.delete().catch(()=> {
+      console.log("ERR | Autodeleting message in: "+message.channel.name)
+    })
   }
 }
 // CUSTOM FUNCTIONS
