@@ -145,6 +145,7 @@ async function newsChannelReactions(message){
 }
 
 function deleteMessagesFilter(message){
+  if (!message.member.manageable) return;
   const deleteFilter = (content) => 
       (containsWordFromList(content,['discord.gg/','discordapp.com/invite/']) || bannedWordslist(content)) && 
       !(content.includes('discord.gg/wf') || 
