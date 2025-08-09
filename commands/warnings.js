@@ -12,7 +12,7 @@ module.exports = {
 			return message.reply("You must specify an user ID.");
 		};
 
-		let warnings = await utils.queryAsync("SELECT * FROM warnings WHERE guild = ? AND discord_id = ?",[message.guild.id,args[0]]);
+		let warnings = await utils.queryAsync("SELECT * FROM warnings WHERE guild = ? AND discord_id = ? ORDER BY id ASC",[message.guild.id,args[0]]);
 		let warningsEmbed = new EmbedBuilder()
 			.setColor('#ff0000')
 			.setTitle(`${args[0]} has ${warnings.length} warnings`);
