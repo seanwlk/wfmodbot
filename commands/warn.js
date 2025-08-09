@@ -4,7 +4,7 @@ const utils = require('../utils.js');
 
 module.exports = {
 	name: 'warn',
-	description: 'Sends warning to a user and saves it into the MySQL database',
+	description: 'Sends warning to a user and saves it into the database',
 	async execute(message, args, client) {
 		if ((!message.member.roles.cache.some(r => r.name === config.Moderator)) && (!message.member.roles.cache.some(r => r.name === config.Admin))) return;
 
@@ -17,8 +17,7 @@ module.exports = {
 
 			if (!reason) return message.reply("Please enter a warning reason");
 
-			// MySQL add warning
-			let ShowWarnName = await utils.queryAsync('SELECT ShowWarnName FROM users WHERE discord_id= ?',[message.author.id]);
+			let ShowWarnName = await utils.queryAsync('SELECT showwarnname FROM users WHERE discord_id= ?',[message.author.id]);
 			const reasonEmbed = new EmbedBuilder()
 				.setColor('#0099ff')
 				.setTitle(`You got a warning from ${message.guild.name}`)
@@ -30,7 +29,7 @@ module.exports = {
 				reasonEmbed.setDescription(reason);
 			} else reasonEmbed.setDescription(reason);
 
-			if (ShowWarnName[0].ShowWarnName === 1) {
+			if (ShowWarnName[0].showwarnname === 1) {
 				reasonEmbed.setAuthor({name:message.author.username, iconURL:message.author.avatarURL()})
 			}
 			member.send({embeds:[reasonEmbed]}).then(() => {
@@ -45,7 +44,7 @@ module.exports = {
 			}).catch(err => {
 				const logAction = new EmbedBuilder()
 					.setColor('#ff0000')
-					.setTitle('Warning was not sent but added on DB')
+					.setTitle('DM was not sent but the warning was saved')
 					.addFields({name:`Moderator`, value:`${message.member}`, inline:true},
 					{name:`Reason`, value:`${err}`, inline:false})
 					.setTimestamp();
